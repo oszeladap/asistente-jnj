@@ -79,7 +79,7 @@ def query_database(question: str) -> str | None:
 
     try:
         db = _get_database()
-        chain = create_sql_query_chain(_get_llm(), db)
+        chain = create_sql_query_chain(_get_llm(), db, k=settings.SQL_MAX_ROWS)
         raw_sql = chain.invoke({"question": question})
     except Exception as exc:
         logger.warning("No se pudo generar la consulta SQL, se continúa sin este contexto: %s", exc)
@@ -104,4 +104,8 @@ def query_database(question: str) -> str | None:
 
     if not result or not str(result).strip():
         return None
-    return str(result)
+
+    # Se incluye la consulta ejecutada junto al resultado: sin ella, el LLM de síntesis
+    # solo ve tuplas sueltas sin saber qué columnas/filtros representan, y termina
+    # respondiendo "no tengo información" aunque el resultado sí sea relevante.
+    return f"Consulta SQL ejecutada: {safe_sql}\nResultado: {result}"
