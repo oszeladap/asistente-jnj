@@ -27,6 +27,25 @@ cp .env.example .env        # completa tus API keys reales
 uvicorn app.main:app --reload --port 8000
 ```
 
+### Documentos base (seed)
+
+`backend/seed_documents/` contiene PDFs que ya están indexados en Pinecone como base de
+conocimiento permanente (actualmente `codigo_procesal_penal.pdf`), independientes de los
+PDFs que los usuarios suban desde el chat. Si el índice de Pinecone se recrea o se borra,
+se pueden volver a indexar así:
+
+```bash
+cd backend
+.venv/Scripts/python.exe -c "
+from app.services import pdf_service, vector_service
+with open('seed_documents/codigo_procesal_penal.pdf', 'rb') as f:
+    content = f.read()
+text = pdf_service.extract_text('codigo_procesal_penal.pdf', content)
+chunks = pdf_service.chunk_text(text)
+print(vector_service.index_chunks('codigo_procesal_penal.pdf', chunks))
+"
+```
+
 Endpoints:
 
 - `GET  /api/health` — estado del servicio y qué integraciones están configuradas.
