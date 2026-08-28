@@ -23,7 +23,10 @@ class Settings(BaseSettings):
     PINECONE_CLOUD: str = "aws"
     PINECONE_REGION: str = "us-east-1"
     PINECONE_TOP_K: int = 4
-    PINECONE_SCORE_THRESHOLD: float = 0.75
+    # Con embeddings truncados (p.ej. 1024 dims vía Matryoshka) la similitud coseno de
+    # coincidencias reales suele rondar 0.6-0.8, no cerca de 1.0. 0.75 descartaba
+    # coincidencias válidas en pruebas reales; 0.5 es un umbral más realista.
+    PINECONE_SCORE_THRESHOLD: float = 0.5
 
     # SQLiteCloud
     CADENA_SQLITECLOUD: str = ""

@@ -45,6 +45,7 @@ def _get_embeddings() -> OpenAIEmbeddings:
     return OpenAIEmbeddings(
         api_key=settings.OPENIA_API_KEY,
         model=settings.OPENAI_EMBEDDING_MODEL,
+        dimensions=settings.OPENAI_EMBEDDING_DIMENSION,
     )
 
 
