@@ -55,6 +55,21 @@ def _get_llm() -> ChatOpenAI:
     return ChatOpenAI(api_key=settings.OPENIA_API_KEY, model=settings.OPENAI_CHAT_MODEL, temperature=0)
 
 
+def _clean_generated_sql(raw_sql: str) -> str:
+    """create_sql_query_chain a veces devuelve el SQL envuelto en una etiqueta
+    "SQLQuery:" y/o un bloque de código Markdown (```sql ... ```), en cualquier
+    combinación/orden. Se despoja iterativamente hasta que no cambie más."""
+    cleaned = raw_sql.strip()
+    for _ in range(4):
+        previous = cleaned
+        cleaned = re.sub(r"^\s*SQLQuery\s*:\s*", "", cleaned, flags=re.IGNORECASE).strip()
+        cleaned = re.sub(r"^```(?:sql)?\s*", "", cleaned, flags=re.IGNORECASE).strip()
+        cleaned = re.sub(r"```\s*$", "", cleaned).strip()
+        if cleaned == previous:
+            break
+    return cleaned
+
+
 def _is_safe_select(sql: str) -> bool:
     cleaned = sql.strip().strip(";").strip()
     if not cleaned:
@@ -85,8 +100,7 @@ def query_database(question: str) -> str | None:
         logger.warning("No se pudo generar la consulta SQL, se continúa sin este contexto: %s", exc)
         return None
 
-    # create_sql_query_chain a veces antepone una etiqueta tipo "SQLQuery:" al SQL real.
-    generated_sql = re.sub(r"^\s*SQLQuery\s*:\s*", "", raw_sql, flags=re.IGNORECASE)
+    generated_sql = _clean_generated_sql(raw_sql)
 
     if not _is_safe_select(generated_sql):
         logger.warning("Consulta SQL generada rechazada por seguridad: %s", generated_sql)
