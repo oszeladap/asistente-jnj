@@ -1,0 +1,14 @@
+.chat-input-bar {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.6rem;
+  padding: 0.9rem 1.25rem;
+  border-top: 1px solid var(--p-content-border-color, #e5e7eb);
+  background: var(--p-content-background, #fff);
+}
+
+.question-input {
+  flex: 1;
+  resize: none;
+  max-height: 140px;
+}

@@ -1,0 +1,43 @@
+<div class="chat-window" #scrollContainer>
+  @if (messages.length === 0) {
+    <div class="empty-state">
+      <i class="pi pi-comments"></i>
+      <p>Haz una pregunta sobre tus documentos o tu base de datos para empezar.</p>
+    </div>
+  }
+
+  @for (message of messages; track $index) {
+    <div class="message-row" [class.user]="message.role === 'user'">
+      <div
+        class="bubble"
+        [class.user-bubble]="message.role === 'user'"
+        [class.assistant-bubble]="message.role === 'assistant'"
+        [class.error-bubble]="message.isError"
+      >
+        <p class="text">{{ message.text }}</p>
+
+        @if (message.sources && message.sources.length > 0) {
+          <div class="sources">
+            @for (source of message.sources; track $index) {
+              <span class="source-tag">
+                <i class="pi" [class.pi-file]="source.type === 'vector'" [class.pi-database]="source.type === 'sql'"></i>
+                {{ source.detail }}
+              </span>
+            }
+          </div>
+        }
+
+        <span class="timestamp">{{ message.timestamp | date: 'HH:mm' }}</span>
+      </div>
+    </div>
+  }
+
+  @if (loading) {
+    <div class="message-row">
+      <div class="bubble assistant-bubble typing-indicator">
+        <p-progressSpinner styleClass="typing-spinner" strokeWidth="6" />
+        <span>Pensando…</span>
+      </div>
+    </div>
+  }
+</div>

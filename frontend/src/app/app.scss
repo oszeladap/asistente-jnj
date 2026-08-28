@@ -1,0 +1,40 @@
+:host {
+  display: block;
+  height: 100vh;
+}
+
+.app-shell {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.app-header {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.9rem 1.25rem;
+  border-bottom: 1px solid var(--p-content-border-color, #e5e7eb);
+  background: var(--p-content-background, #fff);
+
+  i {
+    font-size: 1.3rem;
+    color: var(--p-primary-color, #6366f1);
+  }
+
+  h1 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin: 0;
+  }
+}
+
+.chat-section {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.input-section {
+  flex-shrink: 0;
+}

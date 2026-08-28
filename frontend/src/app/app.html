@@ -1,0 +1,21 @@
+<p-toast />
+
+<div class="app-shell">
+  <header class="app-header">
+    <i class="pi pi-sparkles"></i>
+    <h1>Asistente JNJ</h1>
+  </header>
+
+  <section class="chat-section">
+    <app-chat-window [messages]="messages()" [loading]="loading()" />
+  </section>
+
+  <footer class="input-section">
+    <app-chat-input
+      [disabled]="loading()"
+      [uploading]="uploading()"
+      (send)="onSend($event)"
+      (filesSelected)="onFilesSelected($event)"
+    />
+  </footer>
+</div>

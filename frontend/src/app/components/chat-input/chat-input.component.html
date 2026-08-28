@@ -1,0 +1,37 @@
+<div class="chat-input-bar">
+  <p-fileUpload
+    mode="basic"
+    name="files"
+    accept=".pdf"
+    [multiple]="true"
+    [auto]="true"
+    [customUpload]="true"
+    chooseIcon="pi pi-paperclip"
+    chooseLabel=""
+    [disabled]="disabled || uploading"
+    styleClass="attach-button"
+    pTooltip="Subir PDFs para el asistente"
+    tooltipPosition="top"
+    (uploadHandler)="onUploadHandler($event)"
+  />
+
+  <textarea
+    pTextarea
+    class="question-input"
+    [(ngModel)]="question"
+    (keydown)="onKeydown($event)"
+    [disabled]="disabled"
+    [autoResize]="true"
+    rows="1"
+    placeholder="Escribe tu pregunta..."
+  ></textarea>
+
+  <p-button
+    icon="pi pi-send"
+    [disabled]="!canSend"
+    [loading]="disabled"
+    (onClick)="onSend()"
+    pTooltip="Enviar"
+    tooltipPosition="top"
+  />
+</div>
